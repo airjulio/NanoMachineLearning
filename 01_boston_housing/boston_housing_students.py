@@ -8,11 +8,15 @@ import pylab as pl
 from sklearn import datasets
 from sklearn.tree import DecisionTreeRegressor
 
-
 ################################
 ### ADD EXTRA LIBRARIES HERE ###
 ################################
+from sklearn import cross_validation
+from sklearn.metrics import mean_squared_error, make_scorer
+from sklearn.grid_search import GridSearchCV
+from multiprocessing import cpu_count
 
+PROCESSORS_TO_USE = cpu_count() - 1
 
 def load_data():
     '''Load the Boston dataset.'''
@@ -27,20 +31,28 @@ def explore_city_data(city_data):
     # Get the labels and features from the housing data
     housing_prices = city_data.target
     housing_features = city_data.data
+    number_instances, number_features = housing_features.shape
 
+    ###################################
+    ### Step 1. YOUR CODE GOES HERE ###
+    ###################################
 
-###################################
-### Step 1. YOUR CODE GOES HERE ###
-###################################
+    # Please calculate the following values using the Numpy library
+    # Size of data?
+    # Number of features?
+    # Minimum value?
+    # Maximum Value?
+    # Calculate mean?
+    # Calculate median?
+    # Calculate standard deviation?
 
-# Please calculate the following values using the Numpy library
-# Size of data?
-# Number of features?
-# Minimum value?
-# Maximum Value?
-# Calculate mean?
-# Calculate median?
-# Calculate standard deviation?
+    print 'Number of data points: {}'.format(number_instances)
+    print 'Number of features for each instance: {}'.format(number_features)
+    print 'The lowest value in the dataset (prices) is {}'.format(housing_prices.min())
+    print 'The highest value in the dataset (prices) is {}'.format(housing_prices.max())
+    print 'The mean value in the dataset (prices) is {}'.format(housing_prices.mean())
+    print 'The median value of the dataset (prices) is {}'.format(np.median(housing_prices))
+    print 'The standard deviation of the dataset (prices) is {}'.format(housing_prices.std())
 
 
 def performance_metric(label, prediction):
@@ -51,7 +63,8 @@ def performance_metric(label, prediction):
     ###################################
 
     # http://scikit-learn.org/stable/modules/classes.html#sklearn-metrics-metrics
-    pass
+    return mean_squared_error(label, prediction)
+
 
 
 def split_data(city_data):
@@ -63,7 +76,7 @@ def split_data(city_data):
     ###################################
     ### Step 3. YOUR CODE GOES HERE ###
     ###################################
-
+    X_train,  X_test, y_train, y_test = cross_validation.train_test_split(X, y.reshape(-1, 1), test_size=0.2, random_state=0)
     return X_train, y_train, X_test, y_test
 
 
@@ -162,9 +175,11 @@ def fit_predict_model(city_data):
     # 1. Find the best performance metric
     # should be the same as your performance_metric procedure
     # http://scikit-learn.org/stable/modules/generated/sklearn.metrics.make_scorer.html
+    mean_squared_scorer = make_scorer(mean_squared_error)
 
-    # 2. Use gridearch to fine tune the Decision Tree Regressor and find the best model
+    # 2. Use gridsearch to fine tune the Decision Tree Regressor and find the best model
     # http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html#sklearn.grid_search.GridSearchCV
+    reg = GridSearchCV(regressor, param_grid=parameters, scoring=mean_squared_scorer, n_jobs=PROCESSORS_TO_USE, cv=10, verbose=3)
 
     # Fit the learner to the training data
     print "Final Model: "
