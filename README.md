@@ -12,3 +12,5 @@ For this assignment your client has a house with the following feature set:
 To get started, use the example scikit implementation. You will have to modify the code slightly to get the file up and
 running. When you are done implementing the code please answer the following questions in a report with the appropriate
 sections provided.
+
+(Project rubric: https://docs.google.com/document/d/1oT53-kMhiarkHvAbL0e-dXA_gsXTxjPn_fuO_5yyDYk/pub)
