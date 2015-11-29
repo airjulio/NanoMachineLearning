@@ -14,9 +14,6 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn import cross_validation
 from sklearn.metrics import mean_squared_error, make_scorer
 from sklearn.grid_search import GridSearchCV
-from multiprocessing import cpu_count
-
-PROCESSORS_TO_USE = cpu_count() - 1
 
 def load_data():
     '''Load the Boston dataset.'''
@@ -76,7 +73,7 @@ def split_data(city_data):
     ###################################
     ### Step 3. YOUR CODE GOES HERE ###
     ###################################
-    X_train,  X_test, y_train, y_test = cross_validation.train_test_split(X, y.reshape(-1, 1), test_size=0.2, random_state=0)
+    X_train,  X_test, y_train, y_test = cross_validation.train_test_split(X, y.reshape(-1, 1), test_size=0.4, random_state=0)
     return X_train, y_train, X_test, y_test
 
 
@@ -179,7 +176,7 @@ def fit_predict_model(city_data):
 
     # 2. Use gridsearch to fine tune the Decision Tree Regressor and find the best model
     # http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html#sklearn.grid_search.GridSearchCV
-    reg = GridSearchCV(regressor, param_grid=parameters, scoring=mean_squared_scorer, n_jobs=PROCESSORS_TO_USE, cv=10, verbose=3)
+    reg = GridSearchCV(regressor, param_grid=parameters, scoring=mean_squared_scorer, cv=10, verbose=3)
 
     # Fit the learner to the training data
     print "Final Model: "
