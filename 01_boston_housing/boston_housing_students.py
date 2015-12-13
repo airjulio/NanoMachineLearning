@@ -73,7 +73,7 @@ def split_data(city_data):
     ###################################
     ### Step 3. YOUR CODE GOES HERE ###
     ###################################
-    X_train,  X_test, y_train, y_test = cross_validation.train_test_split(X, y.reshape(-1, 1), test_size=0.4, random_state=0)
+    X_train,  X_test, y_train, y_test = cross_validation.train_test_split(X, y.reshape(-1, 1), test_size=0.2, random_state=0)
     return X_train, y_train, X_test, y_test
 
 
@@ -172,15 +172,17 @@ def fit_predict_model(city_data):
     # 1. Find the best performance metric
     # should be the same as your performance_metric procedure
     # http://scikit-learn.org/stable/modules/generated/sklearn.metrics.make_scorer.html
-    mean_squared_scorer = make_scorer(mean_squared_error)
+    mean_squared_scorer = make_scorer(mean_squared_error, greater_is_better=False)
 
     # 2. Use gridsearch to fine tune the Decision Tree Regressor and find the best model
     # http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html#sklearn.grid_search.GridSearchCV
-    reg = GridSearchCV(regressor, param_grid=parameters, scoring=mean_squared_scorer, cv=10, verbose=3)
+    reg = GridSearchCV(regressor, param_grid=parameters, scoring=mean_squared_scorer)
 
     # Fit the learner to the training data
     print "Final Model: "
     print reg.fit(X, y)
+
+    print "Best estimator:\n", reg.best_estimator_
 
     # Use the model to predict the output of a particular sample
     x = [11.95, 0.00, 18.100, 0, 0.6590, 5.6090, 90.00, 1.385, 24, 680.0, 20.20, 332.09, 12.13]
