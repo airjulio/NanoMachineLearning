@@ -8,9 +8,6 @@ import pylab as pl
 from sklearn import datasets
 from sklearn.tree import DecisionTreeRegressor
 
-################################
-### ADD EXTRA LIBRARIES HERE ###
-################################
 from sklearn import cross_validation
 from sklearn.metrics import mean_squared_error, make_scorer
 from sklearn.grid_search import GridSearchCV
@@ -29,10 +26,6 @@ def explore_city_data(city_data):
     housing_prices = city_data.target
     housing_features = city_data.data
     number_instances, number_features = housing_features.shape
-
-    ###################################
-    ### Step 1. YOUR CODE GOES HERE ###
-    ###################################
 
     # Please calculate the following values using the Numpy library
     # Size of data?
@@ -55,10 +48,6 @@ def explore_city_data(city_data):
 def performance_metric(label, prediction):
     '''Calculate and return the appropriate performance metric.'''
 
-    ###################################
-    ### Step 2. YOUR CODE GOES HERE ###
-    ###################################
-
     # http://scikit-learn.org/stable/modules/classes.html#sklearn-metrics-metrics
     return mean_squared_error(label, prediction)
 
@@ -70,9 +59,6 @@ def split_data(city_data):
     # Get the features and labels from the Boston housing data
     X, y = city_data.data, city_data.target
 
-    ###################################
-    ### Step 3. YOUR CODE GOES HERE ###
-    ###################################
     X_train,  X_test, y_train, y_test = cross_validation.train_test_split(X, y.reshape(-1, 1), test_size=0.2, random_state=0)
     return X_train, y_train, X_test, y_test
 
@@ -165,10 +151,6 @@ def fit_predict_model(city_data):
 
     parameters = {'max_depth': (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)}
 
-    ###################################
-    ### Step 4. YOUR CODE GOES HERE ###
-    ###################################
-
     # 1. Find the best performance metric
     # should be the same as your performance_metric procedure
     # http://scikit-learn.org/stable/modules/generated/sklearn.metrics.make_scorer.html
@@ -186,7 +168,7 @@ def fit_predict_model(city_data):
 
     # Use the model to predict the output of a particular sample
     x = [11.95, 0.00, 18.100, 0, 0.6590, 5.6090, 90.00, 1.385, 24, 680.0, 20.20, 332.09, 12.13]
-    y = reg.predict(x)
+    y = reg.best_estimator_.predict(x)
     print "House: " + str(x)
     print "Prediction: " + str(y)
 
