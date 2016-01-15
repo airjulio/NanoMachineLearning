@@ -40,5 +40,5 @@
 *.libsvm binary
 *.m binary
 *.nb binary
+*.pdf binary
 *.png binary
-
