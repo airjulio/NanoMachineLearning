@@ -2,7 +2,6 @@ import random
 from environment import Agent, Environment
 from planner import RoutePlanner
 from simulator import Simulator
-import numpy as np
 from collections import defaultdict
 
 
@@ -35,36 +34,35 @@ class LearningAgent(Agent):
         self.state = LearningAgent.calculate_state(inputs, self.next_waypoint)
 
         # Select action according to your policy
-        if random.random() > self.gamma and self.state in self.qtable:
-            action, _ = LearningAgent.get_best_action(self.qtable[self.state])
-        else:
-            action = random.choice(self.env.valid_actions)
-            for a in self.env.valid_actions:  # init action:reward dict.
-                self.qtable[self.state][a] = self.qtable[self.state].get(a, 1)
+        action = self.select_action()
 
         # Execute action and get reward
         reward = self.env.act(self, action)
 
         # Learn policy based on state, action, reward
-        self.qtable[self.state][action] = \
-            ((1 - self.alpha) * self.qtable[self.state].get(action, 0)) + (self.alpha * reward)
+        self.update_qtable(action, reward)
 
         print "LearningAgent.update(): deadline = {}, inputs = {}, action = {}, reward = {}".format(deadline, inputs,
                                                                                                     action,
                                                                                                     reward)  # [debug]
+
+    def select_action(self):
+        if random.random() < self.gamma or self.state not in self.qtable:
+            action = random.choice(self.env.valid_actions)
+        else:
+            action = max(self.qtable[self.state], key=self.qtable[self.state].get)
+
+        if self.state not in self.qtable:
+            for a in self.env.valid_actions:  # init action:reward dict.
+                self.qtable[self.state][a] = self.qtable[self.state].get(a, 1)
+        return action
+
+    def update_qtable(self, action, reward):
+        self.qtable[self.state][action] = \
+            ((1 - self.alpha) * self.qtable[self.state].get(action, 0)) + (self.alpha * reward)
         # Decay alpha and epsilon until it reaches 0.1 and 0.0, respectively.
         self.alpha = max(0.1, self.alpha - 0.02)
         self.gamma = max(0.0, self.gamma - 0.02)
-
-    @staticmethod
-    def get_best_action(actions):
-        best_action = None
-        max_reward = -1000
-        for action, reward in actions.items():
-            if reward > max_reward:
-                max_reward = reward
-                best_action = action
-        return best_action, max_reward
 
     @staticmethod
     def calculate_state(raw_state_dict, next_waypoint):
