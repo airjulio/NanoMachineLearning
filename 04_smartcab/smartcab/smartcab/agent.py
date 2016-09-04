@@ -60,7 +60,7 @@ class LearningAgent(Agent):
     def update_qtable(self, action, reward):
         self.qtable[self.state][action] = \
             ((1 - self.alpha) * self.qtable[self.state].get(action, 0)) + (self.alpha * reward)
-        # Decay alpha and epsilon until it reaches 0.1 and 0.0, respectively.
+        # Decay alpha and gamma until it reaches 0.1 and 0.0, respectively.
         self.alpha = max(0.1, self.alpha - 0.02)
         self.gamma = max(0.0, self.gamma - 0.02)
 
