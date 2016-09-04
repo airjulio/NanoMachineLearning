@@ -31,7 +31,7 @@ class LearningAgent(Agent):
         deadline = self.env.get_deadline(self)
 
         # Update state
-        self.state = LearningAgent.calculate_state(inputs, self.next_waypoint)
+        self.state = tuple(inputs.values()) + (self.next_waypoint,)
 
         # Select action according to your policy
         action = self.select_action()
@@ -64,10 +64,6 @@ class LearningAgent(Agent):
         self.alpha = max(0.1, self.alpha - 0.02)
         self.gamma = max(0.0, self.gamma - 0.02)
 
-    @staticmethod
-    def calculate_state(raw_state_dict, next_waypoint):
-        return tuple(raw_state_dict.values()) + (next_waypoint,)
-
 
 def run():
     """Run the agent for a finite number of trials."""
@@ -85,10 +81,6 @@ def run():
 
     sim.run(n_trials=100)  # run for a specified number of trials
     # NOTE: To quit midway, press Esc or close pygame window, or hit Ctrl+C on the command-line
-    # from pprint import pprint
-    # for state, actions in a.qtable.items():
-    #     print state
-    #     pprint(actions)
 
 
 if __name__ == '__main__':
