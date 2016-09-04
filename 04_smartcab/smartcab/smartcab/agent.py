@@ -8,8 +8,6 @@ from collections import defaultdict
 class LearningAgent(Agent):
     """An agent that learns to drive in the smartcab world."""
 
-    actions_values = {'forward': 10, 'left': 100, 'right': 1000, 'red': -1, 'green': 1, None: 1}
-
     def __init__(self, env):
         super(LearningAgent, self).__init__(
             env)  # sets self.env = env, state = None, next_waypoint = None, and a default color
