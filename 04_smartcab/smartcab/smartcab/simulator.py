@@ -35,6 +35,7 @@ class Simulator(object):
         self.current_time = 0.0
         self.last_updated = 0.0
         self.update_delay = update_delay
+        self.success = 0
 
         self.display = display
         if self.display:
@@ -90,6 +91,9 @@ class Simulator(object):
                     # Update environment
                     if self.current_time - self.last_updated >= self.update_delay:
                         self.env.step()
+                        if self.env.done \
+                                and self.env.agent_states[self.env.primary_agent]['location'] == self.env.agent_states[self.env.primary_agent]['destination']:
+                            self.success += 1
                         self.last_updated = self.current_time
 
                     # Render GUI and sleep
