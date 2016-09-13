@@ -42,9 +42,9 @@ class LearningAgent(Agent):
         # Learn policy based on state, action, reward
         self.update_qtable(action, reward)
 
-        # print "LearningAgent.update(): deadline = {}, inputs = {}, action = {}, reward = {}".format(deadline, inputs,
-        #                                                                                             action,
-        #                                                                                             reward)  # [debug]
+        print "LearningAgent.update(): deadline = {}, inputs = {}, action = {}, reward = {}".format(deadline, inputs,
+                                                                                                    action,
+                                                                                                    reward)  # [debug]
 
     def select_action(self):
         if random.random() < self.epsilon or self.state not in self.qtable:
@@ -91,12 +91,13 @@ def run():
     print 'Success rate after {} trials: {}.'.format(trials, sim.success / trials)
 
 
-def run_grid_search():
+def run_grid_search(plot_heatmap=False):
     """Run the agent for a finite number of trials."""
 
     alpha_params = [1.0, .9, .8, .7, .6, .5, .4, .3, .2, .1, 0]
     epsilon_params = [1.0, .9, .8, .7, .6, .5, .4, .3, .2, .1, 0]
     results = {}
+    table = list()
     for alpha in alpha_params:
         for epsilon in epsilon_params:
             # Set up environment and agent
@@ -119,9 +120,18 @@ def run_grid_search():
             #     pprint.pprint(state[1])
             print 'Success rate after {} trials: {}. Initial alpha = {} and initial epsilon = {}' \
                 .format(trials, sim.success / trials, alpha, epsilon)
+            table.append([alpha, epsilon, sim.success / trials])
             results['a:{} e:{}'.format(alpha, epsilon)] = sim.success / trials
+    if plot_heatmap:
+        import pandas as pd
+        import seaborn as sns
+        import matplotlib as plt
+        gs_data = pd.DataFrame(table, columns=['alpha', 'epsilon', 'rate'])
+        gs_data_pivot = gs_data.pivot('alpha', 'epsilon', 'rate')
+        sns.heatmap(gs_data_pivot)
+        plt.show()
     pprint.pprint(sorted(results.items(), key=operator.itemgetter(1)))
 
 
 if __name__ == '__main__':
-    run()
+    run_grid_search()
