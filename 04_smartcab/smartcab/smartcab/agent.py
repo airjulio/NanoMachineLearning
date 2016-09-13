@@ -134,4 +134,4 @@ def run_grid_search(plot_heatmap=False):
 
 
 if __name__ == '__main__':
-    run_grid_search()
+    run()
